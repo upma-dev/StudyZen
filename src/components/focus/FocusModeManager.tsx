@@ -33,24 +33,28 @@ export function FocusModeManager() {
   const [currentConfig, setCurrentConfig] = useState<FocusFormData | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  // Lazy-initialize AudioContext only when needed (on first user interaction)
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
-  useEffect(() => {
-    // Initialize AudioContext on user interaction (e.g., component mount for simplicity here)
-    // A better approach would be to initialize it on the first "Start" click.
-    if (typeof window !== 'undefined' && !audioContext) {
-       try {
-        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        setAudioContext(ctx);
-      } catch (e) {
-        console.warn("Web Audio API is not supported in this browser or failed to initialize.");
-      }
+  // Initialize audio on first interaction to avoid memory allocation on mount
+  const initAudioIfNeeded = useCallback(() => {
+    if (typeof window === 'undefined' || audioContext) return;
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      setAudioContext(ctx);
+    } catch (e) {
+      console.warn("Web Audio API is not supported in this browser or failed to initialize.");
     }
+  }, [audioContext]);
+
+  useEffect(() => {
     return () => {
-      audioContext?.close();
+      // Cleanup audio context on unmount
+      if (audioContext) {
+        audioContext.close().catch(() => {});
+      }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run once on mount
+  }, [audioContext]);
 
   const playSound = useCallback((type: 'focusEnd' | 'breakEnd') => {
     if (isMuted || !audioContext) return;
@@ -132,7 +136,9 @@ export function FocusModeManager() {
     return () => clearInterval(timer);
   }, [phase, timeLeft, isPaused, currentConfig, playSound, toast, fetchAiUpdate]);
 
+// Initialize audio context on user interaction to avoid memory overhead on mount
   const onSubmit = (data: FocusFormData) => {
+    initAudioIfNeeded(); // Initialize audio only when user starts session
     setCurrentConfig(data);
     setPhase('focus');
     setTimeLeft(data.focusDuration * 60);

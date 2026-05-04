@@ -64,46 +64,45 @@ export function NoteEditor({ note, onSave, onClose, onDelete }: NoteEditorProps)
     onSave(data);
   };
 
-  return (
-    <Card className="shadow-lg">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardHeader>
-          <CardTitle className="font-headline text-2xl text-primary">
+return (
+    <Card className="shadow-lg h-full w-full min-w-0 flex flex-col">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
+        <CardHeader className="flex-shrink-0">
+          <CardTitle className="font-headline text-xl sm:text-2xl text-primary">
             {note ? 'Edit Note' : 'Create New Note'}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             {note ? 'Update your study notes below.' : 'Capture your thoughts and ideas.'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="flex-1 min-h-0 space-y-4 overflow-y-auto">
           <div>
             <Label htmlFor="title" className="font-semibold">Title</Label>
             <Input
               id="title"
               {...register('title')}
-              className={`mt-1 ${errors.title ? 'border-destructive' : ''}`}
+              className={`mt-1 w-full ${errors.title ? 'border-destructive' : ''}`}
               placeholder="Enter note title..."
             />
             {errors.title && <p className="text-sm text-destructive mt-1">{errors.title.message}</p>}
           </div>
-          <div>
+          <div className="flex flex-col flex-1 min-h-0">
             <Label htmlFor="content" className="font-semibold">Content</Label>
             <Textarea
               id="content"
               {...register('content')}
-              rows={10}
-              className={`mt-1 ${errors.content ? 'border-destructive' : ''}`}
+              className={`flex-1 min-h-[200px] sm:min-h-[300px] w-full mt-1 ${errors.content ? 'border-destructive' : ''}`}
               placeholder="Start writing your note here..."
             />
             {errors.content && <p className="text-sm text-destructive mt-1">{errors.content.message}</p>}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex flex-col sm:flex-row justify-between gap-2 flex-shrink-0">
           <div>
             {note && onDelete && (
                <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button type="button" variant="destructive" className="mr-2">
+                  <Button type="button" variant="destructive" className="w-full sm:w-auto">
                     <Trash2 className="mr-2 h-4 w-4" /> Delete
                   </Button>
                 </AlertDialogTrigger>
@@ -122,12 +121,12 @@ export function NoteEditor({ note, onSave, onClose, onDelete }: NoteEditorProps)
               </AlertDialog>
             )}
           </div>
-          <div className="space-x-2">
-             <Button type="button" variant="outline" onClick={onClose}>
-              <XCircle className="mr-2 h-4 w-4" /> Cancel
+          <div className="flex gap-2 w-full sm:w-auto">
+             <Button type="button" variant="outline" onClick={onClose} className="flex-1 sm:flex-none">
+              <XCircle className="mr-2 h-4 w-4" /> <span className="hidden sm:inline">Cancel</span>
             </Button>
-            <Button type="submit" disabled={!isDirty} className="bg-primary hover:bg-primary/80 text-primary-foreground">
-              <Save className="mr-2 h-4 w-4" /> Save Note
+            <Button type="submit" disabled={!isDirty} className="flex-1 sm:flex-none bg-primary hover:bg-primary/80 text-primary-foreground">
+              <Save className="mr-2 h-4 w-4" /> <span className="hidden sm:inline">Save Note</span>
             </Button>
           </div>
         </CardFooter>

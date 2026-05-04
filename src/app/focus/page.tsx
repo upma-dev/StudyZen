@@ -7,7 +7,7 @@ import { Brain } from 'lucide-react';
 
 export default function FocusPage() {
   return (
-    <div className="space-y-6">
+    <div className="w-full min-w-0 space-y-6">
        <div className="flex items-center gap-3">
         <Brain className="w-10 h-10 text-primary" />
         <h2 className="text-3xl font-headline font-semibold text-primary">AI Focus Mode</h2>

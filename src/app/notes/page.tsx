@@ -60,29 +60,31 @@ export default function NotesPage() {
     setSelectedNote(null);
   }
 
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-headline font-semibold text-primary">Your Study Notes</h2>
-        <Button onClick={handleCreateNewNote} className="bg-primary hover:bg-primary/80 text-primary-foreground">
-          <PlusCircle className="mr-2 h-5 w-5" /> Create New Note
+return (
+    <div className="flex flex-1 flex-col gap-6 min-h-0 w-full min-w-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full min-w-0">
+        <h2 className="text-2xl sm:text-3xl font-headline font-semibold text-primary">Your Study Notes</h2>
+        <Button onClick={handleCreateNewNote} className="bg-primary hover:bg-primary/80 text-primary-foreground w-full sm:w-auto shrink-0">
+          <PlusCircle className="mr-2 h-5 w-5" /> <span className="sm:sr-only">Create New Note</span>
         </Button>
       </div>
 
-      {isEditorOpen ? (
-        <NoteEditor
-          note={selectedNote}
-          onSave={handleSaveNote}
-          onClose={handleCloseEditor}
-          onDelete={selectedNote ? handleDeleteNote : undefined}
-        />
-      ) : (
-        <NoteList
-          notes={notes}
-          onSelectNote={handleSelectNote}
-          onDeleteNote={handleDeleteNote}
-        />
-      )}
+      <div className="flex-1 min-h-0 w-full min-w-0 overflow-hidden">
+        {isEditorOpen ? (
+          <NoteEditor
+            note={selectedNote}
+            onSave={handleSaveNote}
+            onClose={handleCloseEditor}
+            onDelete={selectedNote ? handleDeleteNote : undefined}
+          />
+        ) : (
+          <NoteList
+            notes={notes}
+            onSelectNote={handleSelectNote}
+            onDeleteNote={handleDeleteNote}
+          />
+        )}
+      </div>
     </div>
   );
 }

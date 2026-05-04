@@ -1,15 +1,17 @@
 
-"use client"
+"use client";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { AnimatedQuote } from "@/components/dashboard/AnimatedQuote";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import StudyZenHome from "@/components/home/StudyZenHome";
 
-export default function DashboardPage() {
+function DashboardPage() {
   return (
-    <div className="space-y-8">
+    <div className="w-full min-w-0 space-y-8">
       <Card className="shadow-xl bg-gradient-to-br from-primary/20 to-accent/20">
         <CardHeader>
           <CardTitle className="text-3xl font-headline text-primary">Welcome to StudyZen!</CardTitle>
@@ -29,25 +31,25 @@ export default function DashboardPage() {
                   <span className="font-semibold">Manage Tasks</span>
                   <span className="text-xs text-muted-foreground">Organize your to-dos</span>
                 </div>
-                <ArrowRight className="ml-auto h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity"/>
+                <ArrowRight className="ml-auto h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </Button>
             </Link>
-             <Link href="/notes" passHref>
+            <Link href="/notes" passHref>
               <Button variant="outline" className="w-full justify-start text-left h-auto py-3 group hover:bg-accent/50">
-                <div className="flex flex-col">
-                  <span className="font-semibold">Jot Notes</span>
+<div className="flex flex-col">
+                  <span className="font-semibold">Notes</span>
                   <span className="text-xs text-muted-foreground">Capture your thoughts</span>
                 </div>
-                <ArrowRight className="ml-auto h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity"/>
+                <ArrowRight className="ml-auto h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </Button>
             </Link>
-             <Link href="/focus" passHref>
+            <Link href="/focus" passHref>
               <Button variant="outline" className="w-full justify-start text-left h-auto py-3 group hover:bg-accent/50">
-                 <div className="flex flex-col">
+                <div className="flex flex-col">
                   <span className="font-semibold">Focus Mode</span>
                   <span className="text-xs text-muted-foreground">Boost your concentration</span>
                 </div>
-                <ArrowRight className="ml-auto h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity"/>
+                <ArrowRight className="ml-auto h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </Button>
             </Link>
           </div>
@@ -74,4 +76,21 @@ export default function DashboardPage() {
       </Card>
     </div>
   );
+}
+
+export default function HomePage() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#050d1a] text-white">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-sm text-gray-300">Loading your workspace...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return user ? <DashboardPage /> : <StudyZenHome />;
 }

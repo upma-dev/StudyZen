@@ -18,10 +18,10 @@ export function NoteList({ notes, onSelectNote, onDeleteNote }: NoteListProps) {
     return [...notes].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   }, [notes]);
 
-  if (notes.length === 0) {
+if (notes.length === 0) {
     return (
-      <Card className="text-center py-10 shadow-sm border-dashed border-2 border-muted">
-        <CardContent className="flex flex-col items-center justify-center">
+      <Card className="w-full h-full flex items-center justify-center shadow-sm border-dashed border-2 border-muted">
+        <CardContent className="flex flex-col items-center justify-center text-center p-6">
           <NotebookText className="w-16 h-16 text-muted-foreground mb-4" strokeWidth={1.5}/>
           <h3 className="text-xl font-semibold text-foreground mb-2">No notes yet!</h3>
           <p className="text-muted-foreground">Click "Create New Note" to start jotting down your thoughts and ideas.</p>
@@ -31,7 +31,7 @@ export function NoteList({ notes, onSelectNote, onDeleteNote }: NoteListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 h-full overflow-y-auto auto-rows-fr">
       {sortedNotes.map((note) => (
         <NoteItem
           key={note.id}

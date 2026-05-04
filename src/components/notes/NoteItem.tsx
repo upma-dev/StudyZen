@@ -15,20 +15,20 @@ interface NoteItemProps {
 export function NoteItem({ note, onSelectNote, onDeleteNote }: NoteItemProps) {
   const timeSinceUpdated = formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true });
 
-  return (
-    <Card className="flex flex-col h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer" onClick={() => onSelectNote(note)}>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-semibold text-primary truncate">{note.title}</CardTitle>
+return (
+    <Card className="w-full flex flex-col h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer min-h-[140px]" onClick={() => onSelectNote(note)}>
+      <CardHeader className="pb-2 px-3 sm:px-4">
+        <CardTitle className="text-lg sm:text-xl font-semibold text-primary truncate">{note.title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <p className="text-sm text-muted-foreground line-clamp-3">
+      <CardContent className="flex-grow px-3 sm:px-4">
+        <p className="text-sm text-muted-foreground line-clamp-3 sm:line-clamp-4">
           {note.content || "No content..."}
         </p>
       </CardContent>
-      <CardFooter className="flex justify-between items-center text-xs text-muted-foreground pt-2">
+      <CardFooter className="flex justify-between items-center text-xs text-muted-foreground pt-2 px-3 sm:px-4">
         <div className="flex items-center">
           <Clock className="w-3 h-3 mr-1" />
-          <span>Updated {timeSinceUpdated}</span>
+          <span className="text-xs">{timeSinceUpdated}</span>
         </div>
         <Button
           variant="ghost"
