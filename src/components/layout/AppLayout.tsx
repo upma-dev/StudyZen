@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ListChecks,
@@ -75,19 +75,35 @@ function SidebarCollapseButton() {
 
 export function AppLayout({ children }: PropsWithChildren) {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const router = useRouter();
+  const { user, loading, logout } = useAuth();
   const isPublicHome = pathname === "/" && !user;
   const [chatbotOpen, setChatbotOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
       await logout();
+      router.push("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-  if (isPublicHome) {
+  // Show nothing while loading to prevent flash
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#050d1a] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // If not logged in and not on home page, show minimal layout (user will see empty content)
+  if (!user && !isPublicHome) {
+    return <div className="min-h-screen bg-[#050d1a]">{children}</div>;
+  }
+
+  if (isPublicHome && !user) {
     return <div className="min-h-screen bg-[#050d1a]">{children}</div>;
   }
 

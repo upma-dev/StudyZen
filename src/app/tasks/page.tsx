@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { Task } from '@/lib/types';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, CalendarDays, ListFilter } from 'lucide-react';
 import { TaskForm } from '@/components/tasks/TaskForm';
@@ -12,10 +13,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function TasksPage() {
+  const { user, loading } = useAuth();
   const [tasks, setTasks] = useLocalStorage<Task[]>('tasks', []);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0F172A] text-white">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-sm text-gray-300">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const handleOpenForm = (task?: Task) => {
     setEditingTask(task || null);

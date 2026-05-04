@@ -1,11 +1,29 @@
 
 "use client";
 
+import { useAuth } from '@/contexts/AuthContext';
 import { FocusModeManager } from '@/components/focus/FocusModeManager';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain } from 'lucide-react';
 
 export default function FocusPage() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0F172A] text-white">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-sm text-gray-300">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="w-full min-w-0 space-y-6">
        <div className="flex items-center gap-3">

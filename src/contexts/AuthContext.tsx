@@ -15,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   isSigningIn: boolean;
+  isLoggingOut: boolean;
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     // Listen for auth state changes
@@ -120,17 +122,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = async () => {
+const logout = async () => {
+    // Prevent multiple simultaneous logout attempts
+    if (isLoggingOut) {
+      console.log('Logout already in progress');
+      return;
+    }
+
+    setIsLoggingOut(true);
     try {
       await signOut(auth);
     } catch (error) {
       console.error("Error signing out:", error);
       throw error;
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, isSigningIn, signInWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loading, isSigningIn, isLoggingOut, signInWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );

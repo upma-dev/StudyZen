@@ -3,15 +3,32 @@
 import { useState } from 'react';
 import type { Note } from '@/lib/types';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { NoteList } from '@/components/notes/NoteList';
 import { NoteEditor } from '@/components/notes/NoteEditor';
 
 export default function NotesPage() {
+  const { user, loading } = useAuth();
   const [notes, setNotes] = useLocalStorage<Note[]>('notes', []);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0F172A] text-white">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-sm text-gray-300">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const handleSelectNote = (note: Note) => {
     setSelectedNote(note);
